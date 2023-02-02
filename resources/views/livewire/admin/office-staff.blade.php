@@ -1,0 +1,125 @@
+<div class="px-5 mt-16" x-data="{ modal: @entangle('assignModal'), deleteModal: @entangle('deleteModal') }">
+
+    <div class="flex items-center justify-between mt-5">
+        <x-search-input wire:model="search" placeholder="office staff" />
+        <div class="space-x-1">
+            <x-page-button @click="modal = true" textValue="New office manager" class="bg-kgreen text-white" />
+        </div>
+
+    </div>
+
+    <div class="mt-5 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <table class="min-w-full divide-y divide-gray-300 bg-white">
+                    <thead>
+                        <tr class="bg-kgreen">
+                            <th scope="col"
+                                class="py-4 uppercase text-left text-sm font-semibold text-white pl-5 w-[30rem]">Name
+                            </th>
+                            <th scope="col" class="py-4 uppercase text-left text-sm font-semibold text-white">Office
+                                Assigned</th>
+                            <th scope="col"
+                                class="py-4 uppercase text-left text-sm font-semibold text-white w-[20rem]">Email</th>
+                            <th scope="col" class="py-4 uppercase text-left text-sm font-semibold text-white">Email
+                                Verification</th>
+                            <th scope="col"
+                                class="py-4 uppercase text-left text-sm font-semibold text-white w-40 pr-5">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @forelse ($offices as $office)
+                            <tr class="odd:bg-white even:bg-gray-100/50">
+                                <td class="whitespace-nowrap py-3 font-semibold text-gray-600 pl-5">
+                                    {{ $users?->find($office->manage_by)->first_name }}
+                                    {{ $users?->find($office->manage_by)->last_name }}
+                                </td>
+                                <td class="whitespace-nowrap py-3 font-semibold text-gray-600">{{ $office->name }}
+                                    Office</td>
+                                <td class="whitespace-nowrap py-3 font-semibold text-gray-600">
+                                    {{ $users?->find($office->manage_by)->email }}
+                                </td>
+                                <td class="whitespace-nowrap py-3 font-semibold text-gray-600">
+                                    @if ($users?->find($office->manage_by)->email_verified_at == null)
+                                        <span
+                                            class="inline-flex items-center justify-center px-2 py-1 mr-2 text-sm font-bold leading-none text-gray-600 bg-gray-100 rounded-full">Unverified</span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center justify-center px-2 py-1 mr-2 text-sm font-bold leading-none text-kgreen bg-kgreen/10 rounded-full">Verified</span>
+                                    @endif
+                                </td>
+                                <td class="whitespace-nowrap py-3 font-semibold text-gray-600 space-x-2">
+                                    <x-action-button class="hover:text-kgreen">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20"
+                                            height="20">
+                                            <path class="fill-current"
+                                                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z" />
+                                        </svg>
+                                    </x-action-button>
+                                    <x-action-button wire:click.prevent="deleteModal({{ $office->id }})"
+                                        class="hover:text-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20"
+                                            height="20">
+                                            <path class="fill-current"
+                                                d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-4.586 6l1.768 1.768-1.414 1.414L12 15.414l-1.768 1.768-1.414-1.414L10.586 14l-1.768-1.768 1.414-1.414L12 12.586l1.768-1.768 1.414 1.414L13.414 14zM9 4v2h6V4H9z" />
+                                        </svg>
+                                    </x-action-button>
+                                </td>
+                            </tr>
+                        @empty
+                            <x-no-data-found colspan="4" />
+                        @endforelse
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="mt-2">
+            {{ $offices->links('custom-pagination') }}
+        </div>
+
+        <!-- Criteria Modal -->
+        <x-modal headTitle="Assign user to office" modalAction="modal" x-cloak>
+            <form>
+                @csrf
+                <div class="mb-2">
+                    <label for="officeId" class="font-semibold">Choose office</label>
+                    <select name="officeId" wire:model="officeId" id="officeId"
+                        class="w-full rounded-md border-gray-300 mt-1 bg-zinc-100">
+                        <option value="" hidden>Select office to assign</option>
+                        @forelse ($showOffice as $office)
+                            <option value="{{ $office->id }}">{{ $office->name }}</option>
+                        @empty
+                            <option value="">No office left</option>
+                        @endforelse
+                    </select>
+                </div>
+                <div class="space-y-2.5">
+                    <x-group-input model="first_name" label="First Name" placeholder="Enter first name"
+                        name="first_name" />
+                    <x-group-input model="last_name" label="Last Name" placeholder="Enter last name" name="last_name" />
+                    <x-group-input type="email" model="email" label="Email Address"
+                        placeholder="Enter valid email address" name="email" />
+                </div>
+
+                <div class="mt-5 flex items-center justify-end space-x-2">
+                    <x-page-button @click="modal = false" textValue="Cancel" class="text-gray-600 border" />
+                    {{-- @dump(count($offices->where('manage_by', '!=', null))) --}}
+                    {{-- <x-modal-button wire:click.prevent="assignUser()" type="submit" textValue="Save user"
+                    class="bg-kgreen hover:bg-kgreen/90 text-white" wire:loading.attr="disabled" /> --}}
+                    {{-- @if (count($showOffice->where('manage_by', '!=', null)) > 0)
+                    <x-modal-button disable="disabled" wire:click.prevent="assignUser()" type="submit" textValue="No office available to assign"
+                    class="bg-gray-400 text-white" wire:loading.attr="disabled" />
+                @else
+                @endif --}}
+                    <x-modal-button wire:click.prevent="assignUser()" type="submit" textValue="Save user"
+                        class="bg-kgreen hover:bg-kgreen/90 text-white" wire:loading.attr="disabled" />
+                </div>
+            </form>
+        </x-modal>
+
+        <x-confirm-dialog headTitle="Delete Office Staff" question="delete this office staff" modalAction="deleteModal"
+            successAction="confirmDelete()" x-cloak />
+    </div>

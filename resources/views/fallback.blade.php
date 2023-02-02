@@ -1,0 +1,1 @@
+<h1 class="grid place-content-center h-screen">Page not Found</h1>
