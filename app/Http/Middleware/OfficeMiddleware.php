@@ -16,7 +16,7 @@ class OfficeMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->role == 2) {
+        if (auth()->user()->role == 2 || auth()->user()->role == 4) {
             return $next($request);
         }
 

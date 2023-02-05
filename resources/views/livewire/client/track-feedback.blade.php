@@ -1,6 +1,7 @@
 <div class="max-w-[95%] mx-auto sm:px-6 lg:px-0 mt-5">
 
-    <a href="{{ route('main') }}" class="bg-kgreen rounded-md text-white py-2 px-2.5 inline-flex items-center space-x-2">
+    <a href="{{ route('main') }}"
+        class="bg-kgreen rounded-md text-white py-2 px-2.5 inline-flex items-center space-x-2">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="21" height="21">
             <path fill="none" d="M0 0h24v24H0z" />
             <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"
@@ -18,9 +19,9 @@
                         <li class="text-gray-600">Comment: </li>
 
                         @if ($feedbackDetails->office)
-                            <li class="text-gray-600">Office: </li>
+                        <li class="text-gray-600">Office: </li>
                         @else
-                            <li class="text-gray-600">Receiver: </li>
+                        <li class="text-gray-600">Receiver: </li>
                         @endif
                     </ul>
                     <ul>
@@ -28,9 +29,9 @@
                         <li>{{ $feedbackDetails->comment }}</li>
                         <li>
                             @if ($feedbackDetails->office)
-                                {{ $feedbackDetails->office->name }} Office
+                            {{ $feedbackDetails->office->name }} Office
                             @else
-                                {{ $feedbackDetails->receiver->first_name . ' ' . $feedbackDetails->receiver->last_name }}
+                            {{ $feedbackDetails->receiver->first_name . ' ' . $feedbackDetails->receiver->last_name }}
                             @endif
                         </li>
                     </ul>
@@ -42,14 +43,14 @@
                 <div class="flex items-start space-x-5 mt-2 mb-5">
                     <ul class="space-y-1">
                         @foreach ($ratings as $rating)
-                            @foreach ($rating->criteria as $criteria)
-                                <li class="text-gray-600">{{ $criteria->name }}:</li>
-                            @endforeach
+                        @foreach ($rating->criteria as $criteria)
+                        <li class="text-gray-600">{{ $criteria->name }}:</li>
+                        @endforeach
                         @endforeach
                     </ul>
                     <ul class="space-y-1">
                         @foreach ($ratings as $rating)
-                            <li class="font-semibold">{{ $rating->value }}</li>
+                        <li class="font-semibold">{{ $rating->value }} / {{ $ratings->count() }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -69,8 +70,8 @@
                                 class="font-semibold text-lg -mt-2 {{ $timeline->status ? 'text-kgreen' : 'text-gray-200' }}">
                                 Completed
                                 @if ($timeline->status)
-                                    <span class="text-sm text-gray-500">-
-                                        {{ date('F d, Y • h:i A', strtotime($timeline->updated_at)) }}</span>
+                                <span class="text-sm text-gray-500">-
+                                    {{ date('F d, Y • h:i A', strtotime($timeline->updated_at)) }}</span>
                                 @endif
                             </h4>
                         </section>
@@ -81,8 +82,8 @@
                     <div class="ml-6 mb-6 pb-6"></div>
                     <div class="flex flex-start items-center">
                         @php
-                            $received = $timeline->receiver_received && $timeline->status;
-                            $underReceived = $timeline->receiver_received && $timeline->status == null;
+                        $received = $timeline->receiver_received && $timeline->status;
+                        $underReceived = $timeline->receiver_received && $timeline->status == null;
                         @endphp
                         <div
                             class="{{ $received ? 'bg-kgreen' : ($underReceived ? 'bg-korange' : 'bg-gray-200') }} w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2">
@@ -92,8 +93,8 @@
                                 class="font-semibold text-lg -mt-2 {{ $received ? 'text-kgreen' : ($underReceived ? 'text-korange' : 'text-gray-200') }}">
                                 Received by receiver
                                 @if ($timeline->receiver_received)
-                                    <span class="text-sm text-gray-500">-
-                                        {{ date('F d, Y • h:i A', strtotime($timeline->receiver_received)) }}</span>
+                                <span class="text-sm text-gray-500">-
+                                    {{ date('F d, Y • h:i A', strtotime($timeline->receiver_received)) }}</span>
                                 @endif
                             </h4>
                             <div class="text-gray-600 duration-300 transition ease-in-out text-sm">
@@ -111,8 +112,8 @@
                     <div class="ml-6 mb-6 pb-6"></div>
                     <div class="flex flex-start items-center">
                         @php
-                            $forwardReceived = $timeline->forwarded_receiver && $timeline->receiver_received;
-                            $forwardTo = $timeline->forwarded_receiver && $timeline->receiver_received == null;
+                        $forwardReceived = $timeline->forwarded_receiver && $timeline->receiver_received;
+                        $forwardTo = $timeline->forwarded_receiver && $timeline->receiver_received == null;
                         @endphp
                         <div
                             class="{{ $forwardReceived ? 'bg-kgreen' : ($forwardTo ? 'bg-korange' : 'bg-gray-200') }} w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2">
@@ -122,8 +123,8 @@
                                 class="font-semibold text-lg -mt-2 {{ $forwardReceived ? 'text-kgreen' : ($forwardTo ? 'text-korange' : 'text-gray-200') }}">
                                 Forwarded to Receiver
                                 @if ($timeline->forwarded_receiver)
-                                    <span class="text-sm text-gray-500">-
-                                        {{ date('F d, Y • h:i A', strtotime($timeline->forwarded_receiver)) }}</span>
+                                <span class="text-sm text-gray-500">-
+                                    {{ date('F d, Y • h:i A', strtotime($timeline->forwarded_receiver)) }}</span>
                                 @endif
                             </h4>
                             <div class="text-gray-600 duration-300 transition ease-in-out text-sm">
@@ -141,8 +142,8 @@
                     <div class="ml-6 mb-6 pb-6"></div>
                     <div class="flex flex-start items-center">
                         @php
-                            $adminForward = $timeline->admin_receive && $timeline->forwarded_receiver;
-                            $adminReceive = $timeline->admin_receive && $timeline->forwarded_receiver == null;
+                        $adminForward = $timeline->admin_receive && $timeline->forwarded_receiver;
+                        $adminReceive = $timeline->admin_receive && $timeline->forwarded_receiver == null;
                         @endphp
                         <div
                             class="{{ $adminForward ? 'bg-kgreen' : ($adminReceive ? 'bg-korange' : 'bg-gray-200') }} w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2">
@@ -152,8 +153,8 @@
                                 class="font-semibold text-lg -mt-2 {{ $adminForward ? 'text-kgreen' : ($adminReceive ? 'text-korange' : 'text-gray-200') }}">
                                 Admin Received
                                 @if ($timeline->admin_receive)
-                                    <span class="text-sm text-gray-500">-
-                                        {{ date('F d, Y • h:i A', strtotime($timeline->admin_receive)) }}</span>
+                                <span class="text-sm text-gray-500">-
+                                    {{ date('F d, Y • h:i A', strtotime($timeline->admin_receive)) }}</span>
                                 @endif
                             </h4>
                             <div class="text-gray-600 duration-300 transition ease-in-out text-sm">
@@ -178,8 +179,8 @@
                                 class="font-semibold text-lg -mt-2 {{ $timeline->pending && $timeline->admin_receive == null ? 'text-korange' : 'text-kgreen' }}">
                                 Pending
                                 @if ($timeline->admin_receive)
-                                    <span class="text-sm text-gray-500">-
-                                        {{ date('F d, Y • h:i A', strtotime($timeline->admin_receive)) }}</span>
+                                <span class="text-sm text-gray-500">-
+                                    {{ date('F d, Y • h:i A', strtotime($timeline->admin_receive)) }}</span>
                                 @endif
                             </h4>
                             <div class="text-gray-600 duration-300 transition ease-in-out text-sm">

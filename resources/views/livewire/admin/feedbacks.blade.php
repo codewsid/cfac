@@ -4,23 +4,23 @@
         <div class="flex items-center justify-between">
             <x-title-heading title="Feedbacks" class="text-gray-700" />
             <div class="flex items-center space-x-2">
-                <x-search-input placeholder="keywords" />
+                <x-search-input placeholder="keywords" wire:model="search" />
                 <div class="flex items-center rounded-md bg-zinc-100 border">
-                    <select wire:model="feedbackStatus"
+                    {{-- <select wire:model="feedbackStatus"
                         class='border-l bg-transparent cursor-pointer border-transparent focus:border-transparent focus:ring-0 py-2'>
-                        {{-- <option value="" hidden>Feedback Type</option> --}}
+                        <option value="" hidden>Feedback Type</option>
                         <option class='bg-white'>All</option>
                         <option value="2" class='bg-white' selected>New</option>
                         <option value="3" class='bg-white'>Forwarded</option>
                         <option value="8" class='bg-white'>With Reply</option>
-                    </select>
+                    </select> --}}
 
                     <select wire:model="typeId"
                         class='border-l bg-transparent cursor-pointer border-transparent focus:border-transparent focus:ring-0 py-2'>
                         <option value="" class='bg-white'>All feedbacks</option>
-                        {{-- @foreach ($feedbackTypes as $type)
+                        @foreach ($feedbackTypes as $type)
                         <option value="{{ $type->id }}" class='bg-white'>{{ $type->name }}</option>
-                        @endforeach --}}
+                        @endforeach
                     </select>
 
                     <svg class="pr-2" width="24" height="25" viewBox="0 0 24 25" fill="none"
@@ -39,8 +39,8 @@
                     <table class="min-w-full divide-y divide-gray-300 bg-white">
                         <thead>
                             <tr class="bg-kgreen">
-                                <th scope="col"
-                                    class="py-4 text-left text-sm font-semibold text-white pl-5 w-[15rem]">Feedback
+                                <th scope="col" class="py-4 text-left text-sm font-semibold text-white pl-5 w-[15rem]">
+                                    Feedback
                                     Type</th>
                                 <th scope="col" class="py-4 text-left text-sm font-semibold text-white">
                                     From</th>
@@ -49,59 +49,62 @@
                                 <th scope="col" class="py-4 text-left text-sm font-semibold text-white mr-3">
                                     Comment
                                 </th>
-                                <th scope="col"
-                                    class="py-4 text-left text-sm font-semibold text-white pl-14 w-[12rem]">Actions</th>
+                                <th scope="col" class="py-4 text-left text-sm font-semibold text-white pl-14 w-[12rem]">
+                                    Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             @forelse ($feedbacks as $feedback)
-                                <tr class="odd:bg-white even:bg-gray-100/50">
-                                    <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 pl-5">
-                                        @if ($feedback->feedback_type_id == 1)
-                                            <h1 class="font-semibold ">
-                                                <span
-                                                    class="bg-red-100 text-red-500 text-md font-bold mr-2 px-2.5 py-0.5 rounded dark:bg-text-red-100 dark:text-red-500">Complaint</span>
-                                            </h1>
-                                        @elseif ($feedback->feedback_type_id == 2)
-                                            <h1 class="font-semibold ">
-                                                <span
-                                                    class="bg-kgreen/10 text-kgreen text-md font-bold mr-2 px-2.5 py-0.5 rounded dark:bg-cgreen/10 dark:text-cgreen">Compliment</span>
-                                            </h1>
-                                        @else
-                                            <h1 class="font-semibold ">
-                                                <span
-                                                    class="bg-korange/10 text-korange text-md font-bold mr-2 px-2.5 py-0.5 rounded dark:bg-corange/10 dark:text-corange">Suggestion</span>
-                                            </h1>
-                                        @endif
+                            <tr class="odd:bg-white even:bg-gray-100/50">
+                                <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 pl-5">
+                                    @if ($feedback->feedback_type_id == 1)
+                                    <h1 class="font-semibold ">
                                         <span
-                                            class="text-xs text-gray-400">{{ $feedback->created_at->format('F d, Y h:i A') }}</span>
-                                    </td>
-                                    <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 space-y1">
-                                        {{ $feedback->user->email }}
-                                    </td>
-                                    <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 space-y1">
-                                        @if ($feedback->office)
-                                            {{ $feedback->office->name }} Office
-                                        @elseif($feedback->receiver)
-                                            {{ $feedback->receiver->first_name . ' ' . $feedback->receiver->last_name }}
-                                        @endif
-                                    </td>
-                                    <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600">
-                                        {{ $feedback->comment }}</td>
-                                    <td
-                                        class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 pl-14 pr-5 flex items-center space-x-2">
-                                        <button type="submit" wire:click="viewDetails({{ $feedback->id }})"
-                                            class="inline-flex items-center rounded-md border border-transparent bg-kgreen px-2.5 py-1.5 text-sm font-medium leading-4 text-white shadow-sm hover:bg-cgreen/80 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                            <span>View Details</span>
-                                        </button>
-                                        {{-- <a href="{{ route('admin.feedback-info', ['id' => $feedback->id]) }}"
-                                            class="inline-flex items-center rounded-md border border-transparent bg-kgreen px-2.5 py-1.5 text-sm font-medium leading-4 text-white shadow-sm hover:bg-cgreen/80 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                            <span>View Details</span>
-                                        </a> --}}
-                                    </td>
-                                </tr>
+                                            class="bg-red-100 text-red-500 text-md font-bold mr-2 px-2.5 py-0.5 rounded dark:bg-text-red-100 dark:text-red-500">Complaint</span>
+                                    </h1>
+                                    @elseif ($feedback->feedback_type_id == 2)
+                                    <h1 class="font-semibold ">
+                                        <span
+                                            class="bg-kgreen/10 text-kgreen text-md font-bold mr-2 px-2.5 py-0.5 rounded dark:bg-cgreen/10 dark:text-cgreen">Compliment</span>
+                                    </h1>
+                                    @else
+                                    <h1 class="font-semibold ">
+                                        <span
+                                            class="bg-korange/10 text-korange text-md font-bold mr-2 px-2.5 py-0.5 rounded dark:bg-corange/10 dark:text-corange">Suggestion</span>
+                                    </h1>
+                                    @endif
+                                    <span
+                                        class="text-xs text-gray-400">{{ $feedback->created_at->format('F d, Y h:i A') }}</span>
+                                </td>
+                                <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 space-y1">
+                                    {{ $feedback->user->email }}
+                                </td>
+                                <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 space-y1">
+                                    @if ($feedback->office)
+                                    {{ $feedback->office->name }} Office
+                                    @elseif($feedback->receiver)
+                                    {{ $feedback->receiver->first_name . ' ' . $feedback->receiver->last_name }}
+                                    @endif
+                                </td>
+                                <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600">
+                                    {{ $feedback->comment }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 pl-14 pr-5 flex items-center space-x-2">
+                                    <button type="submit" wire:click="viewDetails({{ $feedback->id }})"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-kgreen px-2.5 py-1.5 text-sm font-medium leading-4 text-white shadow-sm hover:bg-cgreen/80 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        <span>View Details</span>
+                                    </button>
+                                    {{-- <a href="{{ route('admin.feedback-info', ['id' => $feedback->id]) }}"
+                                    class="inline-flex items-center rounded-md border border-transparent bg-kgreen
+                                    px-2.5 py-1.5 text-sm font-medium leading-4 text-white shadow-sm hover:bg-cgreen/80
+                                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <span>View Details</span>
+                                    </a> --}}
+                                </td>
+                            </tr>
                             @empty
-                                <x-no-data-found colspan="9" />
+                            <x-no-data-found colspan="9" />
                             @endforelse
                         </tbody>
                     </table>
@@ -119,9 +122,9 @@
 {{-- <td class="whitespace-nowrap py-2 text-sm font-semibold text-gray-600 pl-10">
                                 <a href="/feedbacks/edit-feedback/{{ $feedback->id }}" class="hover:text-cgreen">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-class="w-6 h-6">
-<path stroke-linecap="round" stroke-linejoin="round"
-    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+    class="w-6 h-6">
+    <path stroke-linecap="round" stroke-linejoin="round"
+        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
 </svg>
 </a>
 </td> --}}

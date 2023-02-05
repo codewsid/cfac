@@ -18,6 +18,7 @@ use Livewire\Component;
 class FeedbackForm extends Component
 {
     public $feedbacks = [];
+    public $errorMessage;
     public $comment;
 
     public $offices = [];
@@ -35,13 +36,13 @@ class FeedbackForm extends Component
     public $feedbackId;
 
 
-    public function mount()
-    {
-        // $this->empOffice = User::with('offices')
-        //     ->whereHas('offices', function ($query) {
-        //         $query->where('id', $this->selectedEmpOffice);
-        //     })->get();
-    }
+
+    protected $rules = [
+        'feedbackType' => 'required',
+        'selectedReceiver' => 'required',
+        'feedbackReceiver' => 'required',
+        'comment' => 'required',
+    ];
 
     public function render()
     {
@@ -81,6 +82,7 @@ class FeedbackForm extends Component
 
     public function sendFeedback()
     {
+        $this->validate();
         $notifyAdmin = User::where('role', 1)->first();
         if ($this->selectedReceiver == 1) {
             $this->feedbackId = Feedback::create([
@@ -137,6 +139,7 @@ class FeedbackForm extends Component
                 'client_type_id' => session()->get('type'),
                 'feedback_type_id' => $this->feedbackType,
                 'comment' => $this->comment,
+                'office_id' => $this->selectedEmpOffice,
                 'receiver_id' => $this->feedbackReceiver,
             ]);
 
@@ -148,6 +151,18 @@ class FeedbackForm extends Component
                 'feedback_id' => $this->feedbackId->id,
                 'pending' => now(),
             ]);
+
+            // Notification
+            $officeManager = Office::find($this->selectedEmpOffice);
+            $employee = User::find($this->feedbackReceiver);
+
+            $feedbackData = [
+                'feedbackId' => $this->feedbackId->id,
+                'feedbackType' => $this->feedbackId->feedbackType->name,
+                'senderId' => auth()->user()->id,
+                'message' => $this->feedbackId->user->email . ' sent ' . $this->feedbackId->feedbackType->name . ' to ' . $employee->first_name . ' ' . $employee->last_name . ' and it will receive by ' . $officeManager->name . ' office.',
+            ];
+            $notifyAdmin->notify(new \App\Notifications\FeedbackNotification($feedbackData));
         }
 
         foreach ($this->feedbacks as $feedback) {

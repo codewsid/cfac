@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'first_name' => 'ARTA',
             'last_name' => 'HEAD',
             'email' => 'arta-head@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('artahead12345'),
             'role' => Role::ADMIN,
             'email_verified_at' => Carbon::now(),
         ]);
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
             'first_name' => 'OFFICE',
             'last_name' => 'MANAGER',
             'email' => 'office-manager@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
             'role' => Role::OFFICE,
             'email_verified_at' => Carbon::now(),
         ]);
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             'first_name' => 'STUDENT',
             'last_name' => 'MAIN',
             'email' => 'student-main@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
             'role' => Role::CLIENT,
             'email_verified_at' => Carbon::now(),
         ]);

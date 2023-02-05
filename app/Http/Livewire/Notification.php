@@ -78,10 +78,9 @@ class Notification extends Component
                 $adminUser->notify(new \App\Notifications\FeedbackNotification($adminData));
             }
 
-            if(auth()->user()->role == 2){
+            if (auth()->user()->role == 2) {
                 return redirect()->route('office.details', ['id' => $feedbackId]);
-            }
-            else{
+            } else {
                 return redirect()->route('employee.details', ['id' => $feedbackId]);
             }
         }

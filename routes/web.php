@@ -93,7 +93,7 @@ Route::group(['middleware' => ['auth:sanctum', config('jetstream.auth_session'),
 
         // Livewire routes
         Route::get('/', \App\Http\Livewire\Employee\Main::class)->name('employee');
-        // Route::get('/feedback/{id}/details', \App\Http\Livewire\Employee\FeedbackInfo::class)->name('office.details');
+        Route::get('/feedback/{id}/details', \App\Http\Livewire\Employee\FeedbackInfo::class)->name('employee.details');
     });
 });
 

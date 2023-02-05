@@ -81,12 +81,21 @@ class FeedbackInfo extends Component
         $feedbackTimeline = FeedbackTimeline::where('feedback_id', $this->feedbackId);
         $feedbackTimeline->update(['forwarded_receiver' => now()]);
 
-        $forwardToManager = [
-            'feedbackId' => $feedback->id,
-            'feedbackType' => $feedback->feedbackType->name,
-            'senderId' => $feedback->user_id,
-            'message' => 'You have a new ' . $feedback->feedbackType->name . ' feedback forwarded by admin.'
-        ];
+        if ($feedback->is_office && $feedback->office_id && $feedback->receiver_id) {
+            $forwardToManager = [
+                'feedbackId' => $feedback->id,
+                'feedbackType' => $feedback->feedbackType->name,
+                'senderId' => $feedback->user_id,
+                'message' => 'You have a new ' . $feedback->feedbackType->name . ' feedback forwarded by admin for ' . $feedback->receiver->first_name . ' ' . $feedback->receiver->last_name . '.'
+            ];
+        } else {
+            $forwardToManager = [
+                'feedbackId' => $feedback->id,
+                'feedbackType' => $feedback->feedbackType->name,
+                'senderId' => $feedback->user_id,
+                'message' => 'You have a new ' . $feedback->feedbackType->name . ' feedback forwarded by admin.'
+            ];
+        }
 
         if ($feedback->office_id) {
             $toFeedback = $feedback->office->name . ' office';

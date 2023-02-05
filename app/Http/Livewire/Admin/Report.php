@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Exports\ClientListExport;
+use App\Exports\OfficeListExport;
 use App\Models\User;
 // use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 // use Knp\Snappy\Pdf;
@@ -10,12 +12,23 @@ use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 // use Barryvdh\Snappy\Facades\SnappyPdf;
 use Dompdf\Options;
 use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Report extends Component
 {
     public function render()
     {
         return view('livewire.admin.report');
+    }
+
+    public function exportClientList()
+    {
+        return Excel::download(new ClientListExport, 'Client List.xlsx');
+    }
+
+    public function exportOfficeList()
+    {
+        return Excel::download(new OfficeListExport, 'Office List.xlsx');
     }
 
     public function viewPDFReport()

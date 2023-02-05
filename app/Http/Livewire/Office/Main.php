@@ -26,6 +26,7 @@ class Main extends Component
 
     public function viewDetails($id)
     {
+        dd($id);
         $feedback = Feedback::find($id);
         $senderUser = User::where('id', $feedback->user_id)->first();
         $adminUser = User::where('role', 1)->first();
@@ -54,7 +55,7 @@ class Main extends Component
             $adminUser->notify(new \App\Notifications\FeedbackNotification($adminData));
         }
 
-        return redirect()->route('office.details', ['id' => $id]);
+        return redirect()->route('employee.details', ['id' => $id]);
     }
 
     public function updatePassword()
